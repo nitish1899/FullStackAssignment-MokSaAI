@@ -1,0 +1,44 @@
+package-lock.json
+node_modules
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+dist
+coverage
+*.env
+
+*.local
+*.log
+*.lock
+*.tmp
+*.swp
+
+# Local env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+# Log files
+*.log
+# Dependency directories
+node_modules/
+jspm_packages/
+# TypeScript v1 declaration files
+typings/
+
+# Optional npm cache directory
+.npm
+# Optional eslint cache
+.eslintcache
+# Optional stylelint cache
+.stylelintcache
+# Optional cache directory for instrumentation
+.cache/
+# Optional REPL history
+.repl_history
+# dotenv environment variables file
+.env
+# parcel-bundler cache
+.cache
+# Next.js build output
+.next/
