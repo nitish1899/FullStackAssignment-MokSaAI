@@ -1,9 +1,27 @@
-version: '3.8'
+networks:
+  store-network:
+
 
 services:
+  # Backend Node.js service
+  backend:
+    build: .
+    container_name: store-dashboard-backend
+    depends_on:
+      - kafka
+      - mongo
+    ports:
+      - "5000:5000"
+    environment:
+      - KAFKA_HOST=kafka:9092
+      - MONGO_URI=mongodb://root:example@mongo:27017
+    networks:
+      - store-network
+    restart: unless-stopped
+
   # MongoDB service
   mongo:
-    image: mongo:latest
+    image: mongo:6.0
     container_name: store-dashboard-mongo
     ports:
       - "27017:27017"
@@ -12,7 +30,11 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
       - mongo_data:/data/db
-
+    networks:
+      - store-network
+    restart: unless-stopped
+    
+  # Zookeeper service
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     container_name: zookeeper
@@ -21,7 +43,11 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - store-network
+    restart: unless-stopped
 
+  # Kafka service
   kafka:
     image: confluentinc/cp-kafka:7.5.0
     container_name: kafka
@@ -33,12 +59,15 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-      # 👇 Make this 0.0.0.0 for local containers to work with localhost
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    networks:
+      - store-network
+    restart: unless-stopped
 
 
 volumes:
   mongo_data:
+

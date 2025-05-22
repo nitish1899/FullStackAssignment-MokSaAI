@@ -5,8 +5,6 @@ import 'dotenv/config';
 import { connectToDB } from "./db/connect";
 import { startKafkaConsumer } from "./kafka/consumer";
 
-
-
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: { origin: "*" },
